@@ -86,11 +86,11 @@ export default {
 	mounted() {
 		this.$nextTick(() => {
 			this.updateTags();
-			window.addEventListener('resize', this.debounce(this.updateTags, 150));
+			window.addEventListener('resize', this.debounce(this.updateTags, 400));
 		});
 	},
 	beforeDestroy() {
-		window.removeEventListener('resize', this.debounce(this.updateTags, 150));
+		window.removeEventListener('resize', this.debounce(this.updateTags, 400));
 	},
 };
 </script>
