@@ -1,28 +1,51 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+	<v-app>
+		<v-main>
+			<v-container fluid class="pa-0"
+				>100% ширина
+				<div :class="[`${bemBlock}`, `${bemBlock}__full`]">
+					<TagList :data="data" alignment="start" />
+					<TagList :data="data" alignment="space-between" />
+				</div>
+				50% ширина
+				<div :class="[`${bemBlock}`, `${bemBlock}__half`]">
+					<TagList :data="data" alignment="start" />
+					<TagList :data="data" alignment="space-between" />
+				</div> </v-container
+		></v-main>
+	</v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TagList from './components/TagList.vue';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+	name: 'App',
+
+	components: {
+		TagList,
+	},
+
+	data: () => ({
+		bemBlock: 'width-container',
+		data: [
+			{ icon: 'mdi-star-outline', text: '4,2' },
+			{ text: 'Фридландские ворота' },
+			{ text: '1,5 км от вас' },
+		],
+	}),
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss">
+.width-container {
+	height: 250px;
+	border: 1px solid black;
+	&__full {
+		width: 100%;
+	}
+	&__half {
+		width: 50%;
+	}
 }
 </style>
