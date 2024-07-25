@@ -1,5 +1,5 @@
 <template>
-	<v-row :justify="alignment" ref="rowRef">
+	<v-row :class="[`${bemBlock}__wrapper`]" :justify="alignment" ref="rowRef">
 		<v-col
 			:class="[`${bemBlock}__tag`]"
 			v-for="(tag, index) in tags"
@@ -39,6 +39,7 @@ export default {
 			tagsRefs: [],
 			rowWidth: 0,
 			tags: [],
+			tagsRefsWidths: [],
 		};
 	},
 	methods: {
@@ -53,10 +54,12 @@ export default {
 			}
 		},
 		setVisibleTags() {
-			let currentWidth = 15;
+			let currentWidth = 10;
 			const visibleTags = [];
+
 			for (let i = 0; i < this.tagsRefs.length; i++) {
-				const tagWidth = this.tagsRefs[i].offsetWidth;
+				const tagWidth = this.tagsRefsWidths[i];
+
 				if (currentWidth + tagWidth <= this.rowWidth) {
 					currentWidth += tagWidth;
 					visibleTags.push(this.data[i]);
@@ -64,13 +67,13 @@ export default {
 					break;
 				}
 			}
+
 			return visibleTags;
 		},
 		updateTags() {
 			this.calculateRowWidth();
 			const newTags = this.setVisibleTags();
-
-			this.tags = [...newTags];
+			this.tags = newTags;
 		},
 		debounce(func, wait) {
 			let timeout;
@@ -79,24 +82,36 @@ export default {
 				timeout = setTimeout(func, wait);
 			};
 		},
+		createdTagsRefsConsts() {
+			for (let i = 0; i < this.tagsRefs.length; i++) {
+				const tagWidth = this.tagsRefs[i].offsetWidth;
+				this.tagsRefsWidths.push(tagWidth);
+			}
+		},
 	},
 	created() {
 		this.tags = [...this.data];
 	},
 	mounted() {
+		this.createdTagsRefsConsts();
 		this.$nextTick(() => {
 			this.updateTags();
-			window.addEventListener('resize', this.debounce(this.updateTags, 400));
+			window.addEventListener('resize', this.debounce(this.updateTags));
 		});
 	},
+
 	beforeDestroy() {
-		window.removeEventListener('resize', this.debounce(this.updateTags, 400));
+		window.removeEventListener('resize', this.debounce(this.updateTags));
 	},
 };
 </script>
 
 <style lang="scss" scoped>
 .tag-list {
+	&__wrapper {
+		display: flex;
+		flex-wrap: nowrap;
+	}
 	&__tag {
 		white-space: nowrap;
 		flex-wrap: nowrap;
